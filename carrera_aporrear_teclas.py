@@ -4,14 +4,15 @@ import time
 #variables globales
 WINDOW_WIDTH=600#tamaño pantalla x
 WINDOWS_HEIGHT=700#tamaño pantalla y
-COLOR_FONDO='#29dc4f'
+COLOR_FONDO='#fedaa1'
 lista_jugadores=[]
 lista_texto_posiciones_jugadores=[]
 posicionesFinales=[]
 DESPLAZAMIENTO=11#11
 POSICION_META=WINDOWS_HEIGHT/2-50
-COLORES_JUGADORES=['red','blue','green','orange','purple']
+COLORES_JUGADORES=['#C70039','#2471a3','#229954','#f39c12','#7d3c98']
 TECLAS_JUGADORES=["q","h","p","z","Up"]
+NOMBRES_JUGADORES=['Rojo','Azul','Verde','Naranja','Morado']
 empezarCarrera=False
 poderMoverse=False
 #ventana
@@ -29,6 +30,16 @@ meta.pensize(4)
 meta.goto(-WINDOW_WIDTH/2,POSICION_META)
 meta.pendown()
 meta.goto(WINDOW_WIDTH/2,POSICION_META)
+#salida
+salida=turtle.Turtle()
+salida.hideturtle()
+salida.penup()
+salida.color('white')
+salida.pensize(4)
+salida.goto(-WINDOW_WIDTH/2,-POSICION_META)
+salida.pendown()
+salida.goto(WINDOW_WIDTH/2,-POSICION_META)
+
 #texto meta
 textMeta=turtle.Turtle()
 textMeta.hideturtle()
@@ -82,7 +93,7 @@ textoAyuda.goto(0,-100)
 #mostrar informacion
 def mostrar_informacion():
     if not empezarCarrera:
-        pencolorFondoComparar=(0.1607843137254902, 0.8627450980392157, 0.30980392156862746)
+        pencolorFondoComparar=(0.996078431372549, 0.8549019607843137, 0.6313725490196078)
         if textOpciones.pencolor()==pencolorFondoComparar:
             textOpciones.color('black')
             textoAyuda.color(COLOR_FONDO)
@@ -166,7 +177,7 @@ def fin_carrera():
     textClasic.goto(0,0)
     escribirTexto=""
     for pos in range(1,len(posicionesFinales)+1):
-        escribirTexto+=f'   {pos}º- {COLORES_JUGADORES[posicionesFinales[pos-1]-1]}\n'
+        escribirTexto+=f'   {pos}º- {NOMBRES_JUGADORES[posicionesFinales[pos-1]-1]}\n'
     textClasic.write(f'Clasificacion:\n{escribirTexto}',align='center',font=('Arial',16))
     
 def actualizarPosicionesPantalla():
@@ -176,15 +187,16 @@ def actualizarPosicionesPantalla():
         oy.append([jugador,POSICION_META-lista_jugadores[jugador].ycor()])
     oy=sorted(oy,key=lambda x:x[1])
     for i in range(len(oy)):
-        try:
-            lista_texto_posiciones_jugadores[oy[i][0]].goto(lista_jugadores[oy[i][0]].xcor(),lista_jugadores[oy[i][0]].ycor()+25)
-            lista_texto_posiciones_jugadores[oy[i][0]].clear()
-            if oy!=POSICION_META:
-                lista_texto_posiciones_jugadores[oy[i][0]].write(i+1,align='center',font=('Impact',14))
-            else:
-                lista_texto_posiciones_jugadores[oy[i][0]].write(posicionesFinales[oy[i][0]],align='center',font=('Impact',14))
-        except:
-            return 0
+        if oy[i][1]>0:
+            try:
+                lista_texto_posiciones_jugadores[oy[i][0]].goto(lista_jugadores[oy[i][0]].xcor(),lista_jugadores[oy[i][0]].ycor()+25)
+                lista_texto_posiciones_jugadores[oy[i][0]].clear()
+                if oy!=POSICION_META:
+                    lista_texto_posiciones_jugadores[oy[i][0]].write(i+1,align='center',font=('Impact',14))
+                else:
+                    lista_texto_posiciones_jugadores[oy[i][0]].write(posicionesFinales[oy[i][0]],align='center',font=('Impact',14))
+            except:
+                return 0
 
 #movimientos teclado
 window.listen()
