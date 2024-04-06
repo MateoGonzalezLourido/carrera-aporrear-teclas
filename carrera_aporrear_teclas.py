@@ -64,7 +64,7 @@ for jugador in range(0,numeroJugadores):
     nuevo_jugador.color(COLORES_JUGADORES[jugador])
     nuevo_jugador.pensize(3)
     nuevo_jugador.penup()
-    width=((WINDOW_WIDTH/numeroJugadores)*(jugador)-((WINDOW_WIDTH/2)-40))
+    width=((WINDOW_WIDTH/(numeroJugadores+1))*(jugador+1)-(WINDOW_WIDTH/2))
     nuevo_jugador.goto(width,-POSICION_META)
     nuevo_jugador.pendown()
     lista_jugadores.append(nuevo_jugador)
