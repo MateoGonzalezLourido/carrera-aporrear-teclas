@@ -170,25 +170,22 @@ def fin_carrera():
     textClasic.write(f'Clasificacion:\n{escribirTexto}',align='center',font=('Arial',16))
     
 def actualizarPosicionesPantalla():
-    #mostrar posicion encima del jugador oy+15
-    posicionesTexto=[]
+    #mostrar posicion encima del jugador oy+30
     oy=[]
-    for jugador in lista_jugadores:
-        oy.append(POSICION_META-jugador.ycor())
+    for jugador in range(len(lista_jugadores)):
+        oy.append([jugador,POSICION_META-lista_jugadores[jugador].ycor()])
+    oy=sorted(oy,key=lambda x:x[1])
     for i in range(len(oy)):
-        posicionJugador=1
         try:
-            for pos in oy:
-                if pos<oy[i]:
-                    posicionJugador+=1
-                lista_texto_posiciones_jugadores[i].goto(lista_jugadores[i].xcor(),oy[i])
-                lista_texto_posiciones_jugadores[i].clear()
-                if oy!=POSICION_META:
-                    lista_texto_posiciones_jugadores[i].write(posicionJugador,align='center',font=('Impact',14))
-                else:
-                        lista_texto_posiciones_jugadores[i].write(posicionesFinales[i],align='center',font=('Impact',14))
+            lista_texto_posiciones_jugadores[oy[i][0]].goto(lista_jugadores[oy[i][0]].xcor(),lista_jugadores[oy[i][0]].ycor()+25)
+            lista_texto_posiciones_jugadores[oy[i][0]].clear()
+            if oy!=POSICION_META:
+                lista_texto_posiciones_jugadores[oy[i][0]].write(i+1,align='center',font=('Impact',14))
+            else:
+                lista_texto_posiciones_jugadores[oy[i][0]].write(posicionesFinales[oy[i][0]],align='center',font=('Impact',14))
         except:
             return 0
+
 #movimientos teclado
 window.listen()
 window.onkeypress(None,"q")
