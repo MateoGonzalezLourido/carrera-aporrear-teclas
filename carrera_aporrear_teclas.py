@@ -8,7 +8,7 @@ COLOR_FONDO='#29dc4f'
 lista_jugadores=[]
 lista_texto_posiciones_jugadores=[]
 posicionesFinales=[]
-DESPLAZAMIENTO=7
+DESPLAZAMIENTO=11#11
 POSICION_META=WINDOWS_HEIGHT/2-50
 COLORES_JUGADORES=['red','blue','green','orange','purple']
 TECLAS_JUGADORES=["q","h","p","z","Up"]
@@ -25,7 +25,7 @@ meta=turtle.Turtle()
 meta.hideturtle()
 meta.penup()
 meta.color('white')
-meta.pensize(3)
+meta.pensize(4)
 meta.goto(-WINDOW_WIDTH/2,POSICION_META)
 meta.pendown()
 meta.goto(WINDOW_WIDTH/2,POSICION_META)
@@ -140,34 +140,67 @@ def mover_jugador(jugador):
                     posicionesFinales.append(jugador+1)
                     if len(posicionesFinales)>=numeroJugadores-1:
                         fin_carrera()
+
 def fin_carrera():
-    return 0
-    
+    global poderMoverse
+    poderMoverse=False
+    #añadir a la clasificacion el jugador que no cruzo la meta
+    if len(posicionesFinales)!=numeroJugadores:
+        for i in range(1,numeroJugadores+1):
+            try:
+                posicionesFinales.index(i)
+            except:
+                posicionesFinales.append(i)
+    for i in range(len(lista_jugadores)):
+        lista_jugadores[i].speed(0)
+        lista_jugadores[i].penup()
+        lista_jugadores[i].goto(WINDOW_WIDTH+100,WINDOWS_HEIGHT+100)
+    lista_jugadores.clear()
+    lista_texto_posiciones_jugadores.clear()
+    textMeta.clear()
+    #mostrar clasificacion
+    textClasic=turtle.Turtle()
+    textClasic.hideturtle()
+    textClasic.penup()
+    textClasic.color('black')
+    textClasic.goto(0,0)
+    escribirTexto=""
+    for pos in range(1,len(posicionesFinales)+1):
+        escribirTexto+=f'   {pos}º- {COLORES_JUGADORES[posicionesFinales[pos-1]-1]}\n'
+    textClasic.write(f'Clasificacion:\n{escribirTexto}',align='center',font=('Arial',16))
     
 def actualizarPosicionesPantalla():
     #mostrar posicion encima del jugador oy+15
+    posicionesTexto=[]
     oy=[]
     for jugador in lista_jugadores:
         oy.append(POSICION_META-jugador.ycor())
     for i in range(len(oy)):
         posicionJugador=1
-        for pos in oy:
-            if pos<oy[i]:
-                posicionJugador+=1
-        lista_texto_posiciones_jugadores[i].goto(lista_jugadores[i].xcor(),oy[i])
-        lista_texto_posiciones_jugadores[i].clear()
-        if oy!=POSICION_META:
-            lista_texto_posiciones_jugadores[i].write(posicionJugador,align='center',font=('Impact',14))
-        else:
-            lista_texto_posiciones_jugadores[i].write(posicionesFinales[i],align='center',font=('Impact',14))
-            
+        try:
+            for pos in oy:
+                if pos<oy[i]:
+                    posicionJugador+=1
+                lista_texto_posiciones_jugadores[i].goto(lista_jugadores[i].xcor(),oy[i])
+                lista_texto_posiciones_jugadores[i].clear()
+                if oy!=POSICION_META:
+                    lista_texto_posiciones_jugadores[i].write(posicionJugador,align='center',font=('Impact',14))
+                else:
+                        lista_texto_posiciones_jugadores[i].write(posicionesFinales[i],align='center',font=('Impact',14))
+        except:
+            return 0
 #movimientos teclado
 window.listen()
-window.onkeypress(lambda:mover_jugador(0),"q")
-window.onkeypress(lambda:mover_jugador(1),"h")
-window.onkeypress(lambda:mover_jugador(2),"p")
-window.onkeypress(lambda:mover_jugador(3),"z")
-window.onkeypress(lambda:mover_jugador(4),"Up")
+window.onkeypress(None,"q")
+window.onkeypress(None,"h")
+window.onkeypress(None,"p")
+window.onkeypress(None,"z")
+window.onkeypress(None,"Up")
+window.onkeyrelease(lambda:mover_jugador(0),"q")
+window.onkeyrelease(lambda:mover_jugador(1),"h")
+window.onkeyrelease(lambda:mover_jugador(2),"p")
+window.onkeyrelease(lambda:mover_jugador(3),"z")
+window.onkeyrelease(lambda:mover_jugador(4),"Up")
 window.onkeypress(empezar_carrera,"s")
 window.onkeypress(mostrar_informacion,"j")
 
